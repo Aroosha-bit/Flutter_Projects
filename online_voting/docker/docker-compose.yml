@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ../.
+      dockerfile: docker/webserver/Dockerfile
+    container_name: oav_web
+    ports:
+      - "443:443"
+    environment:
+      - HOME=/root
+      - APP_DB_HOST=10.10.11.13
+      - RAILS_MASTER_KEY=09ff3775589d504b96196c40b14aaca6
+    volumes:
+      - ./webserver/nginx.conf:/etc/nginx/sites-enabled/oav_website.conf
+      - ./webserver/rails-env.conf:/etc/nginx/main.d/rails-env.conf
+      - ./webserver/setup_app.sh:/etc/my_init.d/setup_app.sh
+      - ../../open-active-voting:/home/app/oav_website
+    command: /sbin/my_init
+
